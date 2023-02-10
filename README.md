@@ -1,8 +1,8 @@
-# Projet6-Piquante / Procédure pour la soutenance
-1. Dans votre explorateur, créer un dossier P6-EvaluationAF
-2. Télécharger ce dossier, l'extraire dans P6-Evaluation AF et le renommer "backend"
+# Projet6-Piquante / Procédure d'installation
+1. Dans votre explorateur, créer un dossier P6-Piquante
+2. Télécharger ce dossier, l'extraire dans P6-Piquante et le renommer "backend"
 3. Télécharger le dossier Frontend sur le lien suivant: https://github.com/OpenClassrooms-Student-Center/Web-Developer-P6 pour avoir accès à l'interface
-  L'extraire dans P6-Evaluation AF et le renommer "frontend"
+  L'extraire dans P6-Piquante et le renommer "frontend"
 
 4. Pour faire fonctionner le projet, vous devez installer via npm :
 
