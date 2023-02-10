@@ -1,5 +1,5 @@
 # Projet6-Piquante / Procédure
-Créer un dossier "
+1. Télécharger ou cloner ce dossier, le renommer "backend"
 1. Télécharger le dossier Frontend sur le lien suivant: https://github.com/OpenClassrooms-Student-Center/Web-Developer-P6 pour avoir accès à l'interface
   1.1. Pour faire fonctionner le projet, vous devez installer via npm :
   - NodeJS en version 12.14 ou 14.0 / npm install node
