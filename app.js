@@ -33,7 +33,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// Mongo Sanitize pour éviter les injections NoSQL 
+// Mongo Sanitize pour éviter les injections NoSQL
 //Cela éliminera entièrement toutes les entrées avec des caractères interdits dans MongoDB comme le signe '$'.
 app.use(mongoSanitize());
 
