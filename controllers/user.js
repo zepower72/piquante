@@ -1,36 +1,50 @@
+//Déclaration des constantes
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const cryptojs = require("crypto-js");
+const passwordValidator = require("password-validator");
+const passwordVerify = new passwordValidator();
 require("dotenv").config();
 
-exports.signup = (req, res, next) => {
-  const hashedEmail = cryptojs
-    .HmacSHA512(req.body.email, process.env.SECRET_CRYPTOJS_TOKEN)
-    .toString(cryptojs.enc.Base64);
-  bcrypt
-    .hash(req.body.password, 10)
-    .then((hash) => {
-      const user = new User({
-        email: req.body.email,
-        password: hash,
-      });
-      user
-        .save()
-        .then(() => res.status(201).json({ message: "Utilisateur créé !" }))
-        .catch((error) => res.status(400).json({ error }));
-    })
-    .catch((error) => {
-      console.log(error);
-      return res.status(500).json({ error });
-    });
-};
+// Condition de mot de passe avec les options de Password validator
+passwordVerify
+  .is()
+  .min(8)
+  .is()
+  .max(50)
+  .has()
+  .uppercase()
+  .has()
+  .lowercase()
+  .has()
+  .digits()
+  .has()
+  .not()
+  .symbols();
 
+// Partie Inscription
+exports.signup = (req, res, next) => {
+  if (!passwordVerify.validate(req.body.password)) {
+    bcrypt
+      .hash(req.body.password, 10)
+      .then((hash) => {
+        const user = new User({
+          email: req.body.email,
+          password: hash,
+        });
+        user
+          .save()
+          .then(() => res.status(201).json({ message: "Utilisateur créé !" }))
+          .catch((error) => res.status(400).json({ error }));
+      })
+      .catch((error) => {
+        console.log(error);
+        return res.status(500).json({ error });
+      });
+  }
+};
+// Partie Connexion
 exports.login = (req, res, next) => {
-  console.log(req.body);
-  const hashedEmail = cryptojs
-    .HmacSHA512(req.body.email, process.env.SECRET_CRYPTOJS_TOKEN)
-    .toString(cryptojs.enc.Base64);
   User.findOne({ email: hashedEmail })
     .then((user) => {
       if (!user) {
