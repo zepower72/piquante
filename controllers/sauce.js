@@ -2,6 +2,18 @@
 const Sauce = require("../models/Sauce");
 const fs = require("fs");
 
+//Récupération de toutes les sauces
+exports.getAllSauces = (req, res, next) => {
+  Sauce.find()
+    .then((sauces) => res.status(200).json(sauces))
+    .catch((error) => res.status(404).json({ error }));
+};
+//Récupération d'une sauce
+exports.getOneSauce = (req, res, next) => {
+  Sauce.findOne({ _id: req.params.id })
+    .then((sauce) => res.status(200).json(sauce))
+    .catch((error) => res.status(404).json({ error }));
+};
 //Création d'une sauce
 exports.createSauce = (req, res, next) => {
   const sauceObject = JSON.parse(req.body.sauce);
@@ -21,20 +33,6 @@ exports.createSauce = (req, res, next) => {
     .then(() => res.status(201).json({ message: "Sauce enregistrée" }))
     .catch((error) => res.status(400).json({ error }));
 };
-
-//Récupération de toutes les sauces
-exports.getAllSauces = (req, res, next) => {
-  Sauce.find()
-    .then((sauces) => res.status(200).json(sauces))
-    .catch((error) => res.status(404).json({ error }));
-};
-//Récupération d'une sauce
-exports.getOneSauce = (req, res, next) => {
-  Sauce.findOne({ _id: req.params.id })
-    .then((sauce) => res.status(200).json(sauce))
-    .catch((error) => res.status(404).json({ error }));
-};
-
 //Modification d'une sauce
 exports.updateSauce = (req, res, next) => {
   const sauceObject = req.file
