@@ -12,7 +12,7 @@
     - node-sass : attention à prendre la version correspondante à NodeJS. Pour Node 14.0 par exemple, installer node-sass en version 4.14+. / nmp install sass
     
     Sur Windows, ces installations nécessitent d'utiliser PowerShell en tant qu'administrateur.
-    Puis taper ng serve dans le terminal pour avoir accès au serveur de développement. 
+    Puis taper npm start dans le terminal pour avoir accès au serveur de développement. 
     
    4.2. Dans le dossier backend :
     - node js / npm install node
