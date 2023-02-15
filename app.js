@@ -20,6 +20,9 @@ mongoose
   .catch(() => console.log("Connexion à MongoDB échouée !"));
 
 // Configuration des headers pour éviter les erreurs CORS
+/* CORS (Cross-Origin Resource Sharing) est un mécanisme qui permet aux ressources d'une origine d'accéder à des ressources 
+d'une autre origine. Le CORS permet de prendre en charge des requêtes multi-origines sécurisées et des transferts de données 
+entre des navigateurs et des serveurs web.*/
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
@@ -37,14 +40,14 @@ app.use((req, res, next) => {
 //Cela éliminera entièrement toutes les entrées avec des caractères interdits dans MongoDB comme le signe '$'.
 app.use(mongoSanitize());
 
-// Sécurisation des headers HTTP
+// module qui aide à sécuriser vos applications en définissant divers en-têtes HTTP.
 app.use(helmet());
-app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 
 //Récupération des requetes en format Json
 app.use(express.json());
 
 // Gestion des images
+//Les fichiers statiques sont des fichiers que les clients téléchargent tels quels depuis le serveur
 app.use("/images", express.static(path.join(__dirname, "images")));
 
 // Routes pour les utilisateurs et les sauces

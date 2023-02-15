@@ -1,9 +1,9 @@
-const http = require("http");
+const https = require("https");
 const app = require("./app");
 
 // Pour résoudre une erreur inconnue lors de la création d'un user depuis le front.
-const cors = require('cors');
-app.use(cors()) 
+const cors = require("cors");
+app.use(cors());
 // ------------------------------------------------------------------------------
 
 const normalizePort = (val) => {
@@ -40,7 +40,7 @@ const errorHandler = (error) => {
       throw error;
   }
 };
-const server = http.createServer(app);
+const server = https.createServer(app);
 
 server.on("error", errorHandler);
 server.on("listening", () => {
