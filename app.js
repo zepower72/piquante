@@ -41,7 +41,7 @@ app.use((req, res, next) => {
 app.use(mongoSanitize());
 
 // module qui aide à sécuriser vos applications en définissant divers en-têtes HTTP.
-app.use(helmet());
+app.use(helmet({ crossOriginResourcePolicy: false }));
 
 //Récupération des requetes en format Json
 app.use(express.json());

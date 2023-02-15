@@ -1,9 +1,9 @@
 //Déclaration des constantes
 const express = require("express");
 const router = express.Router();
-const sauceCtrl = require("../controllers/sauce");
 const multer = require("../middleware/multer-config");
 const auth = require("../middleware/auth");
+const sauceCtrl = require("../controllers/sauce");
 
 
 

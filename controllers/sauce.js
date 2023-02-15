@@ -15,21 +15,21 @@ exports.getOneSauce = (req, res, next) => {
     .then((sauce) => res.status(200).json(sauce))
     .catch((error) => res.status(404).json({ error }));
 };
-//Création d'une sauce 
-
+//Création d'une sauce
 exports.createSauce = (req, res, next) => {
   const sauceObject = JSON.parse(req.body.sauce); //transforme le corps de la requête en objet JS
   delete sauceObject._id; //supprime l'id généré automatiquement
   const sauce = new Sauce({
     ...sauceObject,
-    imageUrl: `${req.protocol}://${req.get("host")}/images/${ //création de l'url de l'image
+    imageUrl: `${req.protocol}://${req.get("host")}/images/${
+      //création de l'url de l'image
       req.file.filename //récupération du nom du fichier
     }`,
     likes: 0, //initialisation des likes à 0
-    dislikes: 0,//initialisation des dislikes à 0
+    dislikes: 0, //initialisation des dislikes à 0
     usersLiked: [" "], //initialisation du tableau des likes à un tableau vide
     usersdisLiked: [" "], //initialisation du tableau des dislikes à un tableau vide
-  }); 
+  });
   //fonction en promesse save() pour enregistrer la sauce dans la base de données
   sauce
     .save()
@@ -37,19 +37,21 @@ exports.createSauce = (req, res, next) => {
     .catch((error) => res.status(400).json({ error }));
 };
 //Modification d'une sauce
-exports.updateSauce = (req, res, next) => { 
-  const sauceObject = req.file 
+exports.updateSauce = (req, res, next) => {
+  const sauceObject = req.file
     ? {
         ...JSON.parse(req.body.sauce),
-        imageUrl: `${req.protocol}://${req.get("host")}/images/${ //on crée l'url de l'image
+        imageUrl: `${req.protocol}://${req.get("host")}/images/${
+          //on crée l'url de l'image
           req.file.filename //on récupère le nom du fichier
         }`,
       }
-    : { ...req.body };//sinon on récupère le corps de la requête
+    : { ...req.body }; //sinon on récupère le corps de la requête
 
-  Sauce.updateOne( //fonction en promesse updateOne() pour modifier la sauce dans la base de données
-    { _id: req.params.id },//on récupère l'id de la sauce
-    { ...sauceObject, _id: req.params.id }//
+  Sauce.updateOne(
+    //fonction en promesse updateOne() pour modifier la sauce dans la base de données
+    { _id: req.params.id }, //on récupère l'id de la sauce
+    { ...sauceObject, _id: req.params.id } //
   )
     .then(res.status(200).json({ message: "Sauce modifiée" }))
     .catch((error) => res.status(400).json({ error }));
@@ -59,7 +61,8 @@ exports.deleteSauce = (req, res, next) => {
   Sauce.findOne({ _id: req.params.id }) //fonction en promesse findOne() pour trouver la sauce dans la base de données
     .then((sauce) => {
       const filename = sauce.imageUrl.split("/images/")[1]; //
-      fs.unlink(`images/${filename}`, () => {//fonction unlink() pour supprimer le fichier image
+      fs.unlink(`images/${filename}`, () => {
+        //fonction unlink() pour supprimer le fichier image
         Sauce.deleteOne({ _id: req.params.id }) //fonction en promesse deleteOne() pour supprimer la sauce dans la base de données
           .then(res.status(200).json({ message: "Sauce supprimée" }))
           .catch((error) => res.status(400).json({ error }));
@@ -68,15 +71,19 @@ exports.deleteSauce = (req, res, next) => {
     .catch((error) => res.status(500).json({ error }));
 };
 //Gestion des likes et dislikes
-exports.likeDislikeSauce = (req, res, next) => { //fonction likeDislikeSauce() pour gérer les likes et dislikes
+exports.likeDislikeSauce = (req, res, next) => {
+  //fonction likeDislikeSauce() pour gérer les likes et dislikes
   let like = req.body.like;
   let userId = req.body.userId;
   let sauceId = req.params.id;
 
-  switch (like) { //switch pour gérer les cas
+  switch (
+    like //switch pour gérer les cas
+  ) {
     case 1: //si l'utilisateur aime la sauce
-      Sauce.updateOne( //fonction en promesse updateOne() pour modifier l'avis sur la sauce dans la base de données
-        { _id: sauceId },//on récupère l'id de la sauce
+      Sauce.updateOne(
+        //fonction en promesse updateOne() pour modifier l'avis sur la sauce dans la base de données
+        { _id: sauceId }, //on récupère l'id de la sauce
         { $push: { usersLiked: userId }, $inc: { likes: +1 } } //on incrémente le nombre de likes
       )
         .then(() => res.status(200).json({ message: `J'aime` }))
@@ -86,18 +93,23 @@ exports.likeDislikeSauce = (req, res, next) => { //fonction likeDislikeSauce() p
 
     case 0: //si l'utilisateur annule son avis
       Sauce.findOne({ _id: sauceId }) //fonction en promesse findOne() pour trouver la sauce dans la base de données
-        .then((sauce) => { //on récupère la sauce
-          if (sauce.usersLiked.includes(userId)) { //si l'utilisateur a déjà liké la sauce
-            Sauce.updateOne( // on met à jour la sauce  dans la base de données
+        .then((sauce) => {
+          //on récupère la sauce
+          if (sauce.usersLiked.includes(userId)) {
+            //si l'utilisateur a déjà liké la sauce
+            Sauce.updateOne(
+              // on met à jour la sauce  dans la base de données
               { _id: sauceId }, //on récupère l'id de la sauce
               { $pull: { usersLiked: userId }, $inc: { likes: -1 } } //on décrémente le nombre de likes
             )
               .then(() => res.status(200).json({ message: `Neutre` }))
               .catch((error) => res.status(400).json({ error }));
           }
-          if (sauce.usersDisliked.includes(userId)) { //si l'utilisateur a déjà disliké la sauce
-            Sauce.updateOne( // on met à jour la sauce  dans la base de données
-              { _id: sauceId },//
+          if (sauce.usersDisliked.includes(userId)) {
+            //si l'utilisateur a déjà disliké la sauce
+            Sauce.updateOne(
+              // on met à jour la sauce  dans la base de données
+              { _id: sauceId }, //
               { $pull: { usersDisliked: userId }, $inc: { dislikes: -1 } } // on décrémente le nombre de dislikes
             )
               .then(() => res.status(200).json({ message: `Neutre` }))
@@ -108,8 +120,9 @@ exports.likeDislikeSauce = (req, res, next) => { //fonction likeDislikeSauce() p
       break; //on sort du switch
 
     case -1: //si l'utilisateur n'aime pas la sauce
-      Sauce.updateOne( //fonction en promesse updateOne() pour modifier l'avis sur la sauce dans la base de données
-        { _id: sauceId },//on récupère l'id de la sauce
+      Sauce.updateOne(
+        //fonction en promesse updateOne() pour modifier l'avis sur la sauce dans la base de données
+        { _id: sauceId }, //on récupère l'id de la sauce
         { $push: { usersDisliked: userId }, $inc: { dislikes: +1 } } //on incrémente le nombre de dislikes
       )
         .then(() => {
