@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const mongoSanitize = require("express-mongo-sanitize");
 const helmet = require("helmet");
 const path = require("path");
+
 const userRoutes = require("./routes/user");
 const sauceRoutes = require("./routes/sauce");
 require("dotenv").config();
@@ -23,6 +24,7 @@ mongoose
 /* CORS (Cross-Origin Resource Sharing) est un mécanisme qui permet aux ressources d'une origine d'accéder à des ressources 
 d'une autre origine. Le CORS permet de prendre en charge des requêtes multi-origines sécurisées et des transferts de données 
 entre des navigateurs et des serveurs web.*/
+
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
@@ -41,7 +43,8 @@ app.use((req, res, next) => {
 app.use(mongoSanitize());
 
 // module qui aide à sécuriser vos applications en définissant divers en-têtes HTTP.
-app.use(helmet({ crossOriginResourcePolicy: false }));
+app.use(helmet());
+app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 
 //Récupération des requetes en format Json
 app.use(express.json());
