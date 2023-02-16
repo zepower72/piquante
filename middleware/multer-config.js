@@ -1,12 +1,14 @@
 // Déclaration de Multer
 const multer = require("multer");
 
-// Extension pour les images
+// Déclaration de MIME_TYPES pour indiquer à multer quelles sont les extensions de fichiers autorisées
+
 const MIME_TYPES = {
   "image/jpg": "jpg",
   "image/jpeg": "jpg",
   "image/png": "png",
 };
+
 // Middleware images
 const storage = multer.diskStorage({
   //diskStorage() pour indiquer à multer où enregistrer les fichiers entrants
@@ -14,8 +16,7 @@ const storage = multer.diskStorage({
     //destination() pour indiquer à multer d'enregistrer les fichiers dans le dossier images
     callback(null, "images"); //null pour dire qu'il n'y a pas d'erreur
   },
-  //filename() pour indiquer à multer d'utiliser le nom d'origine, de remplacer les espaces par des underscores
-  //et d'ajouter un timestamp Date.now() comme nom de fichier
+  //filename() pour indiquer à multer d'utiliser le nom d'origine
 
   filename: (req, file, callback) => {
     const name = file.originalname.split(" ").join("_");

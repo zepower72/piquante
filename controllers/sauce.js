@@ -37,19 +37,18 @@ exports.createSauce = (req, res, next) => {
     .catch((error) => res.status(400).json({ error }));
 };
 //Modification d'une sauce
-exports.updateSauce = (req, res, next) => {
-  const sauceObject = req.file
+
+exports.updateSauce = (req, res, next) => { //fonction de modification générale de la sauce
+    const sauceObject = req.file
     ? {
-        ...JSON.parse(req.body.sauce),
-        imageUrl: `${req.protocol}://${req.get("host")}/images/${
-          //on crée l'url de l'image
-          req.file.filename //on récupère le nom du fichier
+        ...JSON.parse(req.body.sauce), //on transforme le corps de la requête en objet JS
+        imageUrl: `${req.protocol}://${req.get("host")}/images/${ //on crée l'url de l'image
+             req.file.filename //on récupère le nom du fichier
         }`,
       }
     : { ...req.body }; //sinon on récupère le corps de la requête
 
-  Sauce.updateOne(
-    //fonction en promesse updateOne() pour modifier la sauce dans la base de données
+  Sauce.updateOne( //fonction en promesse updateOne() pour modifier une sauce particulière
     { _id: req.params.id }, //on récupère l'id de la sauce
     { ...sauceObject, _id: req.params.id } //
   )
@@ -73,9 +72,9 @@ exports.deleteSauce = (req, res, next) => {
 //Gestion des likes et dislikes
 exports.likeDislikeSauce = (req, res, next) => {
   //fonction likeDislikeSauce() pour gérer les likes et dislikes
-  let like = req.body.like;
-  let userId = req.body.userId;
-  let sauceId = req.params.id;
+  let like = req.body.like; //on récupère le like ou le dis
+  let userId = req.body.userId; //on récupère l'id de l'utilisateur
+  let sauceId = req.params.id; //on récupère l'id de la sauce
 
   switch (
     like //switch pour gérer les cas

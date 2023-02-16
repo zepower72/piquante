@@ -1,6 +1,6 @@
 //Déclaration des constantes
 const express = require("express");
-const router = express.Router();
+const router = express.Router(); //
 const userCtrl = require("../controllers/user");
 
 // Routes pour s'inscrire ou se connecter
